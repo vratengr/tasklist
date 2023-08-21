@@ -1,0 +1,47 @@
+services:
+    db:
+      container_name: tasklist-mariadb
+      image: mariadb:11.0
+      restart: always
+      networks:
+        - tasklist-network
+      volumes:
+        - dbdata:/var/lib/mysql
+      environment:
+        MARIADB_ROOT_PASSWORD : root
+        MARIADB_DATABASE: tasklist
+        MARIADB_USER : user
+        MARIADB_PASSWORD : user
+
+    app:
+      container_name: tasklist-php
+      restart: always
+      networks:
+        - tasklist-network
+      ports:
+        - 8006:80
+      volumes:
+        - ./html:/var/www/html
+        - ./config/vhost.conf:/etc/apache2/sites-enabled/000-default.conf
+      depends_on:
+        - db
+      build:
+        context: .
+        dockerfile: Dockerfile
+
+    phpmyadmin:
+      container_name: tasklist-phpmyadmin
+      image: phpmyadmin:5.2.1
+      restart: always
+      networks:
+        - tasklist-network
+      ports:
+        - 5006:80
+      depends_on:
+        - db
+
+networks:
+  tasklist-network:
+
+volumes:
+  dbdata:
