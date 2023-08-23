@@ -31,3 +31,12 @@ For Docker deployment, please see instructions below:
         1. copy `.env.example` to `.env`
         1. run `php artisan key:generate` to create your APP_KEY
         1. modify the `.env` file according to your local setup
+
+
+
+
+
+
+##############################
+run php artisan migrate
+run npm install / composer install
