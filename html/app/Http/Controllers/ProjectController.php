@@ -3,32 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() : View
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return view('index', ['projects' => Project::all()]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
-        //
+        $validator = Validator::make($request->all(), ['name' => 'required|unique:projects,name']);
+        $validator->setAttributeNames(['name' => 'Project Name']);
+
+        if ($validator->fails()) {
+            $response = ['error' => $validator->errors()->all()];
+        } else {
+            $response = Project::create(['name' => $request->name]);
+        }
+
+        return response()->json($response);
     }
 
     /**
@@ -36,30 +41,17 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        $list = $project->tasks()->orderBy('order')->get();
+        Log::debug(print_r($list, true));
+        return response()->json($list);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Remove the specified resource from storage and all its linked data
      */
-    public function edit(Project $project)
+    public function destroy(Project $project) : void
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Project $project)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Project $project)
-    {
-        //
+        $project->tasks()->delete();
+        $project->delete();
     }
 }

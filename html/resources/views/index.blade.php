@@ -22,47 +22,50 @@
     </head>
     <body class="antialiased">
         <div class="container grid grid-cols-2 p-10">
+            @csrf
             <div class="border-2 border-gray-500 border-solid p-5">
-                <div class="border-b-4 border-gray-200 border-solid pb-5 space-x-2">
-                    <input class="form-input rounded" type="text" name="project" placeholder="Project Name"/>
-                    <button class="rounded bg-gray-800 hover:bg-gray-700 text-white py-2 px-10">Add Project</button>
+                <div class="border-b-4 border-gray-200 border-solid pb-5">
+                    <input id="project-name" class="form-input rounded" type="text" placeholder="Project Name"/>
+                    <button id="add-project" class="rounded bg-gray-800 hover:bg-gray-700 text-white py-2 px-10 cursor-pointer">Add Project</button>
+                    <div id="project-error" class="h-4 italic text-sm text-red-600"></div>
                 </div>
                 <div class="pt-10">
                     <div class="pb-4 font-bold">Project List</div>
-                    <ul id="project-list" class="">
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 p-2">Item 1</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 p-2">Item 2</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 p-2">Item 3</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 p-2">Item 4</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 p-2">Item 5</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 p-2">Item 6</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 p-2">Item 7</li>
+                    <ul id="project-list">
+                        @foreach ($projects as $project)
+                            <x-list class="project project-{{ $project->id }}" :data-id="$project->id" :item="$project->name"></x-list>
+                        @endforeach
                     </ul>
+                    <div id="project-template" class="hidden"><x-list class="project"></x-list></div>
                 </div>
             </div>
             <div class="border-2 border-gray-500 border-solid p-5">
                 <div class="border-b-4 border-gray-200 border-solid pb-5">
-                    <select class="form-select rounded pr-32" name="projects">
+                    <select id="projects" class="form-select rounded pr-32">
                         <option value="">Select Project</option>
-                        <option value="test">Test</option>
-                        <option value="test">Test</option>
-                        <option value="test">Test</option>
+                        @foreach ($projects as $project)
+                            <option value="{{ $project->id }}">{{ $project->name }}</option>
+                        @endforeach
                     </select>
+                    <input id="task-name" class="form-input rounded" type="text" placeholder="Task Name"/>
+                    <button id="add-task" class="rounded bg-gray-800 hover:bg-gray-700 text-white py-2 px-10">Add Task</button>
+                    <div id="task-error" class="h-4 italic text-sm text-red-600"></div>
                 </div>
                 <div class="pt-10">
                     <div class="pb-4">
-                        <span class="font-bold">Task List</span>
+                        <span class="font-bold">
+                            <span id="project" class="text-red-600 pr-1"></span>
+                            <span>Task List</span>
+                        </span>
                         <span class="italic text-xs">(Drag to change order)</span>
                     </div>
-                    <ul id="task-list" class="">
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 py-2 pl-4 cursor-pointer">Item 1</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 py-2 pl-4 cursor-pointer">Item 2</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 py-2 pl-4 cursor-pointer">Item 3</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 py-2 pl-4 cursor-pointer">Item 4</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 py-2 pl-4 cursor-pointer">Item 5</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 py-2 pl-4 cursor-pointer">Item 6</li>
-                        <li class="odd:bg-gray-800 odd:text-white even:bg-white text-gray-800 py-2 pl-4 cursor-pointer">Item 7</li>
-                    </ul>
+                    <ul id="task-list"></ul>
+                    <div id="task-template" class="hidden">
+                        <x-list class="cursor-pointer task">
+                            <x-slot name="dragicon"><span><x-svg.drag class="w-5 h-5"></x-svg.drag></span></x-slot>
+                            <x-slot name="editicon"><x-svg.edit class="w-5 h-5 cursor-pointer edit"></x-svg.edit></x-slot>
+                        </x-list>
+                    </div>
                 </div>
             </div>
         </div>

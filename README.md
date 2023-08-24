@@ -12,7 +12,7 @@ BONUS POINT: add project functionality to the tasks. User should be able to sele
 
 
 ### SOLUTION:
-The zip file contains a docker compose file to set up the local dev environment. If you already have your own local web server, please extract the main code which is within the /html folder and deploy it in your web directory.
+The zip file contains a docker compose file to set up the local dev environment. If you already have your own local web server, please extract the main code which is within the `/html` folder and deploy it in your web directory.
 
 For Docker deployment, please see instructions below:
 - Prerequisite:
@@ -21,22 +21,15 @@ For Docker deployment, please see instructions below:
     1. Unzip file
     1. Open the extracted folder in a terminal
     1. Run `docker compose up -d`
+    1. If you're using VS Code, you can open the container using the Dev Containers extension, if not run `docker exec -it tasklist-php bash` to open the container's terminal
+    1. Run migrations using `php artisan migrate`
     1. Access site in http://localhost:8006
 - Note:
     - By default, Laravel has a defined ``.gitignore`` file which excludes packages/dependencies.
     - For portability of this code, all packages/dependencies have been included.
     - `.env` file has also been included since there is no critical information in it, however, this is a no-no in shared repositories.
-    - In production/real-world scenarios, Laravel's `.gitignore` will be retained, as such, you will have to:
+    - In production/real-world scenarios, Laravel's `.gitignore` will be retained, as such a number of files will be missing when you clone a repository, with that, you will have to:
         1. install dependencies using `composer install` and/or `npm install`
         1. copy `.env.example` to `.env`
         1. run `php artisan key:generate` to create your APP_KEY
         1. modify the `.env` file according to your local setup
-
-
-
-
-
-
-##############################
-run php artisan migrate
-run npm install / composer install
